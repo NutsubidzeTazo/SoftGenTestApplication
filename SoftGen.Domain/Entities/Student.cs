@@ -16,7 +16,8 @@ namespace SoftGen.Domain.Entities
         public string? PersonalNumber { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public bool? IsDeleted { get; set; }
-
+        public int UserId { get; set; }
+        public User User { get; set; }
         public ICollection<StudentCourse> Courses { get; set; } = new List<StudentCourse>();
     }
 }

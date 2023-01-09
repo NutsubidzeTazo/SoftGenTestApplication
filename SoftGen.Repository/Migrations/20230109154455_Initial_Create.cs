@@ -27,6 +27,21 @@ namespace SoftGen.Repository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -37,11 +52,18 @@ namespace SoftGen.Repository.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PersonalNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Students_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -55,11 +77,18 @@ namespace SoftGen.Repository.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PersonalNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Teachers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Teachers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,6 +154,12 @@ namespace SoftGen.Repository.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Students_UserId",
+                table: "Students",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TeacherCourses_CourseId",
                 table: "TeacherCourses",
                 column: "CourseId");
@@ -133,6 +168,12 @@ namespace SoftGen.Repository.Migrations
                 name: "IX_TeacherCourses_TeacherId",
                 table: "TeacherCourses",
                 column: "TeacherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teachers_UserId",
+                table: "Teachers",
+                column: "UserId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -152,6 +193,9 @@ namespace SoftGen.Repository.Migrations
 
             migrationBuilder.DropTable(
                 name: "Teachers");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

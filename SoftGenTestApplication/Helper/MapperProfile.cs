@@ -16,6 +16,7 @@ namespace SoftGenTestApplication.Helper
             CreateMap<Course, CourseDTO>();
             CreateMap<Student,StudentDTO>();
             CreateMap<Teacher, TeacherDTO>();
+            CreateMap<UserDTO, User>();
         }
     }
 }

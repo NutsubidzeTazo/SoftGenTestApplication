@@ -1,11 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using SoftGen.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SoftGen.Repository.Context
 {
@@ -16,6 +10,7 @@ namespace SoftGen.Repository.Context
         }
 
         public DbSet<Student> Students { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Teacher> Teachers{ get; set; }
         public DbSet<StudentCourse> StudentCourses { get; set; }
@@ -48,6 +43,12 @@ namespace SoftGen.Repository.Context
             modelBuilder.Entity<TeacherCourse>(options => {
                 options.HasKey(x => x.Id);
             });
+            modelBuilder.Entity<User>(options => {
+                options.HasKey(x => x.Id);
+                options.HasOne(x => x.Student).WithOne(x => x.User).HasForeignKey<Student>(x => x.UserId);
+                options.HasOne(x => x.Teacher).WithOne(x => x.User).HasForeignKey<Teacher>(x => x.UserId);
+            });
+
         }
     }
 }

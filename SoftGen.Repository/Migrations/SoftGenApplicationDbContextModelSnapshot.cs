@@ -72,7 +72,13 @@ namespace SoftGen.Repository.Migrations
                     b.Property<string>("PersonalNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
@@ -127,7 +133,13 @@ namespace SoftGen.Repository.Migrations
                     b.Property<string>("PersonalNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Teachers");
                 });
@@ -155,6 +167,42 @@ namespace SoftGen.Repository.Migrations
                     b.ToTable("TeacherCourses");
                 });
 
+            modelBuilder.Entity("SoftGen.Domain.Entities.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SoftGen.Domain.Entities.Student", b =>
+                {
+                    b.HasOne("SoftGen.Domain.Entities.User", "User")
+                        .WithOne("Student")
+                        .HasForeignKey("SoftGen.Domain.Entities.Student", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SoftGen.Domain.Entities.StudentCourse", b =>
                 {
                     b.HasOne("SoftGen.Domain.Entities.Course", "Course")
@@ -172,6 +220,17 @@ namespace SoftGen.Repository.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SoftGen.Domain.Entities.Teacher", b =>
+                {
+                    b.HasOne("SoftGen.Domain.Entities.User", "User")
+                        .WithOne("Teacher")
+                        .HasForeignKey("SoftGen.Domain.Entities.Teacher", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SoftGen.Domain.Entities.TeacherCourse", b =>
@@ -208,6 +267,15 @@ namespace SoftGen.Repository.Migrations
             modelBuilder.Entity("SoftGen.Domain.Entities.Teacher", b =>
                 {
                     b.Navigation("Courses");
+                });
+
+            modelBuilder.Entity("SoftGen.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Student")
+                        .IsRequired();
+
+                    b.Navigation("Teacher")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
